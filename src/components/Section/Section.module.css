@@ -1,5 +1,6 @@
 .container {
   width: 400px;
+  margin: 0 auto;
 }
 
 .container:not(:last-child) {

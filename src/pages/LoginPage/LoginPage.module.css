@@ -1,6 +1,15 @@
 .form__container {
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
+  transition: background-color 500ms linear;
+  padding: 40px;
+  border-radius: 20px;
+}
+
+.form__container:hover {
+  background-color: rgb(219, 226, 250);
+  border-radius: 20px;
 }
 
 .label {
@@ -9,8 +18,8 @@
 }
 
 .input {
-  margin-bottom: 15px;
-  width: 180px;
+  margin-bottom: 12px;
+  width: 220px;
   height: 25px;
   border: 1px solid rgb(0, 0, 0);
   border-radius: 2px;
@@ -26,12 +35,14 @@
   background-color: rgb(201, 213, 245);
   font-weight: 600;
   transition: color 250ms linear;
+  margin: auto;
+  margin-top: 15px;
 }
 
 .add__btn:hover,
 .add__btn:focus {
   background-color: rgb(90, 127, 250);
-  color: rgb(255, 255, 255);
+  color: rgb(3, 3, 3);
   font-weight: 700;
   border: none;
   border-radius: 4px;
