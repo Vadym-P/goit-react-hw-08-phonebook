@@ -1,34 +1,33 @@
-import { useReducer } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { registration } from '../../redux/auth/auth-operations';
 import s from './RegistrationPage.module.css';
 
-const initialState = {
-  name: '',
-  email: '',
-  password: '',
-};
-
-function reducer(state, action) {
-  switch (action.type) {
-    case 'name':
-      return { ...state, [action.type]: action.payload };
-    case 'email':
-      return { ...state, [action.type]: action.payload };
-    case 'password':
-      return { ...state, [action.type]: action.payload };
-    default:
-      return state;
-  }
-}
-
 export default function RegistrationPage() {
   const dispatch = useDispatch();
-  const [state, setState] = useReducer(reducer, initialState);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleChange = ({ target: { name, value } }) => {
+    switch (name) {
+      case 'name':
+        return setName(value);
+      case 'email':
+        return setEmail(value);
+      case 'password':
+        return setPassword(value);
+      default:
+        return;
+    }
+  };
 
   const handleSubmit = event => {
     event.preventDefault();
-    dispatch(registration(state));
+    dispatch(registration({ name, email, password }));
+    setName('');
+    setEmail('');
+    setPassword('');
   };
 
   return (
@@ -40,16 +39,13 @@ export default function RegistrationPage() {
             className={s.input}
             type="text"
             name="name"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Имя может состоять только из букв, апострофа, тире
           и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de
           Castelmore d'Artagnan и т. п."
             placeholder="Enter name"
             required
-            value={state.name}
-            onChange={event =>
-              setState({ type: event.target.name, payload: event.target.value })
-            }
+            value={name}
+            onChange={handleChange}
           />
         </label>
         <label className={s.label}>
@@ -58,14 +54,11 @@ export default function RegistrationPage() {
             className={s.input}
             type="email"
             name="email"
-            // pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2, 4}$"
             title="Введите Ваш email"
             placeholder="Enter email"
             required
-            value={state.email}
-            onChange={event =>
-              setState({ type: event.target.name, payload: event.target.value })
-            }
+            value={email}
+            onChange={handleChange}
           />
         </label>
         <label className={s.label}>
@@ -77,10 +70,8 @@ export default function RegistrationPage() {
             title="Введите Ваш пароль"
             placeholder="Create a password"
             required
-            value={state.password}
-            onChange={event =>
-              setState({ type: event.target.name, payload: event.target.value })
-            }
+            value={password}
+            onChange={handleChange}
           />
         </label>
         <button type="submit" className={s.add__btn}>

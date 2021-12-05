@@ -1,22 +1,25 @@
 import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { getIsLoggedIn } from '../../redux/auth/auth-selectors';
 import s from './Navigation.module.css';
 
 export default function Navigation() {
+  const isLoggedIn = useSelector(getIsLoggedIn);
   return (
-    <div className={s.wrapper}>
-      <nav>
-        <ul className={s.list}>
-          <li className={s.item}>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                isActive ? `${s.activeLink}` : `${s.link}`
-              }
-            >
-              Home
-            </NavLink>
-          </li>
-          <li className={s.item}>
+    <nav className={s.wrapper}>
+      <ul className={s.list}>
+        <li className={s.item}>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive ? `${s.activeLink}` : `${s.link}`
+            }
+          >
+            Home
+          </NavLink>
+        </li>
+        <li className={s.item}>
+          {isLoggedIn && (
             <NavLink
               to="/contacts"
               className={({ isActive }) =>
@@ -25,31 +28,9 @@ export default function Navigation() {
             >
               Contacts
             </NavLink>
-          </li>
-        </ul>
-      </nav>
-      <ul className={s.auth}>
-        <li className={s.item}>
-          <NavLink
-            to="/login"
-            className={({ isActive }) =>
-              isActive ? `${s.activeLink}` : `${s.link}`
-            }
-          >
-            Login
-          </NavLink>
-        </li>
-        <li className={s.item}>
-          <NavLink
-            to="/registration"
-            className={({ isActive }) =>
-              isActive ? `${s.activeLink}` : `${s.link}`
-            }
-          >
-            Registration
-          </NavLink>
+          )}
         </li>
       </ul>
-    </div>
+    </nav>
   );
 }

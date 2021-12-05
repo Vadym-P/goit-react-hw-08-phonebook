@@ -2,38 +2,103 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Navigation from './components/Navigation';
-// import Form from './components/Form';
-// import Section from './components/Section';
-// import ContactsList from './components/ContactsList';
-// import Filter from './components/Filter';
-import ContactsPage from './pages/ContactsPage/ContactsPage';
-import HomePage from './pages/HomePage/HomePage';
-import LoginPage from './pages/LoginPage/LoginPage';
-import RegistrationPage from './pages/RegistrationPage/RegistrationPage';
+import AppBar from './components/AppBar';
+// import ContactsPage from './pages/ContactsPage/ContactsPage';
+// import HomePage from './pages/HomePage/HomePage';
+// import LoginPage from './pages/LoginPage/LoginPage';
+// import RegistrationPage from './pages/RegistrationPage/RegistrationPage';
 import Loader from './components/Loader';
+import PrivateRoute from './components/PrivateRoute';
+import PublicRoute from './components/PublicRoute';
 import { fetchContacts } from './redux/contacts/contacts-operations';
+import { refreshUser } from './redux/auth/auth-operations';
+import {
+  getToken,
+  getIsLoggedIn,
+  // getIsFetchingCurrent,
+} from './redux/auth/auth-selectors';
 import s from './App.module.css';
+
+const HomePage = lazy(() =>
+  import('./pages/HomePage/HomePage.js' /* webpackChunkName: "home-page" */),
+);
+const ContactsPage = lazy(() =>
+  import(
+    './pages/ContactsPage/ContactsPage.js' /* webpackChunkName: "contacts-page" */
+  ),
+);
+const LoginPage = lazy(() =>
+  import('./pages/LoginPage/LoginPage.js' /* webpackChunkName: "login-page" */),
+);
+const RegistrationPage = lazy(() =>
+  import(
+    './pages/RegistrationPage/RegistrationPage.js' /* webpackChunkName: "registration-page" */
+  ),
+);
 
 export default function App() {
   const dispatch = useDispatch();
-  // const isLoading = useSelector(state => state.contacts.loading);
+  const token = useSelector(getToken);
+  const isLoggedIn = useSelector(getIsLoggedIn);
+  // const isLoading = useSelector(getIsFetchingCurrent);
 
-  // useEffect(() => {
-  //   dispatch(fetchContacts());
-  // }, [dispatch]);
+  useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
+    dispatch(fetchContacts(token));
+  }, [dispatch, isLoggedIn, token]);
+
+  useEffect(() => {
+    dispatch(refreshUser(token));
+  }, [dispatch, token]);
 
   return (
+    // !isLoading && (
     <div className={s.container}>
-      <Navigation />
+      <AppBar />
+
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/contacts" element={<ContactsPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/registration" element={<RegistrationPage />} />
+          <Route
+            path="/goit-react-hw-08-phonebook"
+            element={<Navigate to="/" />}
+          />
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <HomePage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/contacts"
+            element={
+              <PrivateRoute>
+                <ContactsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute restricted>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/registration"
+            element={
+              <PublicRoute restricted>
+                <RegistrationPage />
+              </PublicRoute>
+            }
+          />
         </Routes>
       </Suspense>
     </div>
+    // )
   );
 }

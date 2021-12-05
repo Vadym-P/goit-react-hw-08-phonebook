@@ -6,7 +6,7 @@ import s from './Form.module.css';
 
 export default function Form() {
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [number, setNumber] = useState('');
 
   const dispatch = useDispatch();
   const contactsList = useSelector(getContactsList);
@@ -19,8 +19,8 @@ export default function Form() {
         setName(value);
         break;
 
-      case 'phone':
-        setPhone(value);
+      case 'number':
+        setNumber(value);
         break;
 
       default:
@@ -30,13 +30,13 @@ export default function Form() {
 
   const handleSubmit = event => {
     event.preventDefault();
-    addContacts({ name, phone });
+    addContacts({ name, number });
     resetForm();
   };
 
   const resetForm = () => {
     setName('');
-    setPhone('');
+    setNumber('');
   };
 
   const addContacts = contact => {
@@ -70,12 +70,12 @@ export default function Form() {
         <input
           className={s.input}
           type="tel"
-          name="phone"
+          name="number"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
           placeholder="Enter phone number"
           required
-          value={phone}
+          value={number}
           onChange={handleChange}
         />
       </label>
